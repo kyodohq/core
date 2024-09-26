@@ -15,6 +15,8 @@ import clsx from "clsx";
 import { infosSchema } from "../schema";
 import { useSignUpInfos } from "@/hooks/useSignUpInfos";
 import { useAuth } from "@/stores/authStore";
+import { useCheckUsername } from "@/hooks/useCheckUsername";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export const InfosForm = () => {
   type infosForm = z.infer<typeof infosSchema>;
@@ -27,7 +29,17 @@ export const InfosForm = () => {
       username: "",
       display_name: "",
     },
+    mode: "onSubmit",
   });
+
+  const username = form.watch("username");
+  const debouncedUsername = useDebounce(username, 150);
+  const {
+    isLoading: isCheckingUsername,
+    isError: isCheckUsernameError,
+    error: checkUsernameError,
+    data,
+  } = useCheckUsername(debouncedUsername);
 
   const onInfosSubmit = (data: z.infer<typeof infosSchema>) => {
     const fullData = { ...data, email: emailToVerify };
@@ -49,21 +61,28 @@ export const InfosForm = () => {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="ml-3 flex items-center">
-                Username
-                {errors.username && (
-                  <>
-                    {" - "}
-                    <FormMessage className="ml-1 leading-none" />
-                  </>
+              <FormLabel
+                className={clsx(
+                  "ml-3 flex items-center",
+                  isCheckUsernameError && "text-red-500",
+                  data && "text-green-600",
                 )}
+              >
+                Username
+                <CustomMessage
+                  isCheckingUsername={isCheckingUsername}
+                  errors={errors}
+                  checkUsernameError={checkUsernameError}
+                  data={data}
+                  isCheckUsernameError={isCheckUsernameError}
+                />
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   placeholder="batman_123"
                   className={clsx(
-                    errors.username &&
+                    (errors.username || isCheckUsernameError) &&
                       "!border-red-500 focus-visible:!border-red-500 !bg-red-500/5",
                     "rounded-xl bg-zinc-50 placeholder:text-zinc-800/45 border-[0.5px] border-zinc-800/15 focus-visible:border-zinc-800 transition-colors",
                   )}
@@ -109,4 +128,50 @@ export const InfosForm = () => {
       </form>
     </Form>
   );
+};
+
+const CustomMessage = ({
+  isCheckUsernameError,
+  isCheckingUsername,
+  errors,
+  checkUsernameError,
+  data,
+}: {
+  isCheckUsernameError: boolean;
+  isCheckingUsername: boolean;
+  errors: any;
+  checkUsernameError: any;
+  data: any;
+}) => {
+  if (errors.username || isCheckUsernameError)
+    return (
+      <>
+        {" - "}
+        <FormMessage className="ml-1 leading-none">
+          {errors.username?.message || checkUsernameError?.message}
+        </FormMessage>
+      </>
+    );
+
+  if (data)
+    return (
+      <>
+        {" - "}
+        <FormMessage className="ml-1 leading-none text-green-600">
+          Available
+        </FormMessage>
+      </>
+    );
+
+  if (isCheckingUsername)
+    return (
+      <>
+        {" - "}
+        <FormMessage className="ml-1 leading-none text-zinc-800">
+          Checking...
+        </FormMessage>
+      </>
+    );
+
+  return null;
 };

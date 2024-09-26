@@ -21,6 +21,7 @@
     "@tauri-apps/api": "^1.6.0",
     "@tauri-apps/plugin-fs": "^2.0.0-rc.2",
     "@tauri-apps/plugin-http": "^2.0.0-rc.2",
+    "@uidotdev/usehooks": "^2.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "ecctrl": "^1.0.89",

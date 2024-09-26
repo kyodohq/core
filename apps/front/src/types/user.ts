@@ -5,7 +5,8 @@ export const userSchema = z.object({
   username: z
     .string()
     .min(3, "Must be at least 3 characters.")
-    .max(32, "Must be at most 32 characters."),
+    .max(32, "Must be at most 32 characters.")
+    .regex(/^\S*$/, "Must not contain spaces."),
   display_name: z
     .string()
     .min(3, "Must be at least 3 characters.")

@@ -16,14 +16,13 @@ export const verifyEmail = async (page: "signup" | "signin", email: string) => {
     body: JSON.stringify(body),
   });
 
+  const data = await res.json();
   if (!res.ok) {
-    const message = await res.json();
     throw new Error(
-      message.error || "Something went wrong with email verification",
+      data.error || "Something went wrong with email verification",
     );
   }
 
-  const data = await res.json();
   return data;
 };
 
@@ -45,14 +44,13 @@ export const verifyCode = async (
     body: JSON.stringify(body),
   });
 
+  const data = await res.json();
   if (!res.ok) {
-    const message = await res.json();
     throw new Error(
-      message.error || "Something went wrong with code verification",
+      data.error || "Something went wrong with code verification",
     );
   }
 
-  const data = await res.json();
   return data;
 };
 
@@ -65,13 +63,24 @@ export const signUpCreateAccount = async (infos: createUserDTO) => {
     body: JSON.stringify(infos),
   });
 
+  const data = await res.json();
   if (!res.ok) {
-    const message = await res.json();
-    throw new Error(
-      message.error || "Something went wrong with account creation",
-    );
+    throw new Error(data.error || "Something went wrong with account creation");
   }
 
-  const data = await res.json();
+  return data;
+};
+
+export const verifyUsername = async (username: string) => {
+  const res = await fetch(`${BASE_URL}/auth/verify-username`, {
+    method: "POST",
+    body: username,
+  });
+
+  const data = await res.text();
+  if (!res.ok) {
+    throw new Error(data || "No status");
+  }
+
   return data;
 };

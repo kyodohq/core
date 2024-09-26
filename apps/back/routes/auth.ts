@@ -67,6 +67,16 @@ authRoute.post(
 
 authRoute.post("/signup", zValidator("json", createUserSchema), async (c) => {
   const user = c.req.valid("json");
+
+  const result = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.username, user.username));
+  const userFromDb = result[0];
+  if (userFromDb) {
+    return c.json({ error: "Already exists" }, 401);
+  }
+
   const res = await db.insert(usersTable).values(user).returning({
     id: usersTable.id,
     username: usersTable.username,
@@ -166,4 +176,23 @@ authRoute.post("/me", async (c) => {
     .where(eq(usersTable.id, +id));
 
   return c.json(userFromDb);
+});
+
+authRoute.post("/verify-username", async (c) => {
+  const username = await c.req.text();
+  if (!username) {
+    return c.text("Unavailable", { status: 401 });
+  }
+
+  const result = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.username, username));
+  const userFromDb = result[0];
+
+  if (userFromDb) {
+    return c.text("Unavailable", { status: 401 });
+  }
+
+  return c.text("Available");
 });
