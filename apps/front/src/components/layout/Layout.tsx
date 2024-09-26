@@ -1,6 +1,13 @@
-import { Outlet } from "react-router-dom";
+import { useCheckIdentity } from "@/hooks/useCheckIdentity";
+import { Navigate, Outlet } from "react-router-dom";
 
 export const Layout = () => {
+  const { isError } = useCheckIdentity();
+
+  if (isError) {
+    return <Navigate to="/signin" replace />;
+  }
+
   return (
     <>
       <div

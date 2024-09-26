@@ -159,9 +159,10 @@ authRoute.post(
   },
 );
 
-authRoute.post("/me", async (c) => {
-  const sessionId = c.req.header("Authorization");
-  if (!sessionId) {
+authRoute.get("/me", async (c) => {
+  const header = c.req.header("Authorization");
+  const sessionId = header?.split(" ")[1];
+  if (!header || !sessionId) {
     return c.json({ error: "Session expired" }, 401);
   }
 

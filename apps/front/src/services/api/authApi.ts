@@ -1,3 +1,4 @@
+import { useTauriStore } from "@/hooks/useTauriStore";
 import { createUserDTO } from "@/types/user";
 import { fetch } from "@tauri-apps/plugin-http";
 
@@ -80,6 +81,23 @@ export const verifyUsername = async (username: string) => {
   const data = await res.text();
   if (!res.ok) {
     throw new Error(data || "No status");
+  }
+
+  return data;
+};
+
+export const verifyIdentity = async (sessionId: string | null) => {
+  const res = await fetch(`${BASE_URL}/auth/me`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${sessionId}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "No status");
   }
 
   return data;

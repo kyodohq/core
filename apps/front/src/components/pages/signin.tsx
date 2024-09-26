@@ -2,24 +2,20 @@ import { useStep } from "@/stores/stepStore";
 import { AnimatePresence } from "framer-motion";
 import { Header } from "../shared/auth/Header";
 import { Legals } from "../shared/auth/Legals";
-import { codeSchema, emailSchema } from "../shared/schema";
 import { EmailForm } from "../shared/auth/emailForm";
 import { CodeForm } from "../shared/auth/codeForm";
-import { z } from "zod";
 import { motion } from "framer-motion";
 import { animateForm, exitForm, initialForm } from "../shared/animation";
+import { useCheckIdentity } from "@/hooks/useCheckIdentity";
+import { Navigate } from "react-router-dom";
 
 export const Signin = () => {
-  const { step, setStep } = useStep();
+  const { step } = useStep();
+  const { data } = useCheckIdentity();
 
-  const onEmailSubmit = (data: z.infer<typeof emailSchema>) => {
-    console.log(data);
-    setStep("code");
-  };
-
-  const onCodeSubmit = (data: z.infer<typeof codeSchema>) => {
-    console.log(data);
-  };
+  if (data) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <>
