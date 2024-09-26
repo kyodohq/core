@@ -1,6 +1,6 @@
 # REQUIREMENTS
 
-- [PNPM](https://pnpm.io/installation): package manager
+- [Bun](https://bun.sh/): package manager
 - [Rust](https://www.rust-lang.org/tools/install): we use [Tauri](https://v2.tauri.app/) for our desktop app which is based on Rust
 
 ## How to use
