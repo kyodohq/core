@@ -1,5 +1,6 @@
 import { useCheckIdentity } from "@/hooks/useCheckIdentity";
 import { Navigate, Outlet } from "react-router-dom";
+import { DynamicMenu } from "./DynamicMenu";
 
 export const Layout = () => {
   const { isError } = useCheckIdentity();
@@ -15,6 +16,7 @@ export const Layout = () => {
         data-tauri-drag-region
       />
       <Outlet />
+      <DynamicMenu />
     </>
   );
 };
