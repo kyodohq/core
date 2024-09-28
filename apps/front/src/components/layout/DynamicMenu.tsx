@@ -13,7 +13,9 @@ export function DynamicMenu() {
   useEffect(() => {
     console.log(containerRef.current);
     if (containerRef.current) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
+      const { width, height } = (
+        containerRef.current as HTMLDivElement
+      ).getBoundingClientRect();
       setContainerSize({ width: width + 16, height: height + 16 });
     }
   }, []);
