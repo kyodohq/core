@@ -1,11 +1,20 @@
 import { useCheckIdentity } from "@/hooks/useCheckIdentity";
 import { Navigate, Outlet } from "react-router-dom";
 import { DynamicMenu } from "./DynamicMenu";
+import { LogoutButton } from "./LogoutButton";
+import { useAuth } from "@/stores/authStore";
+
+const ENVIRONMENT = import.meta.env.NODE_ENV;
 
 export const Layout = () => {
-  const { isError } = useCheckIdentity();
+  const { isError, isLoading } = useCheckIdentity();
+  const { isAuthenticated } = useAuth();
 
-  if (isError) {
+  if (isLoading) {
+    return <div>Loading...</div>; // Or a loading spinner
+  }
+
+  if (isError && !isAuthenticated) {
     return <Navigate to="/signin" replace />;
   }
 
@@ -17,6 +26,7 @@ export const Layout = () => {
       />
       <Outlet />
       <DynamicMenu />
+      {ENVIRONMENT !== "production" && <LogoutButton />}
     </>
   );
 };

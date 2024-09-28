@@ -102,3 +102,20 @@ export const verifyIdentity = async (sessionId: string | null) => {
 
   return data;
 };
+
+export const logout = async (sessionId: string | null) => {
+  const res = await fetch(`${BASE_URL}/auth/logout`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${sessionId}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  const message = await res.text();
+  if (!res.ok) {
+    throw new Error(message || "No status");
+  }
+
+  return message;
+};

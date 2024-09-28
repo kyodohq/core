@@ -5,7 +5,7 @@ import { useAuth } from "@/stores/authStore";
 
 export const useCheckIdentity = () => {
   const { getSessionId } = useTauriStore();
-  const { setIsAuthenticated, setUser } = useAuth();
+  const { setIsAuthenticated, setUser, isAuthenticated } = useAuth();
 
   return useQuery({
     queryKey: ["checkIdentity"],
@@ -23,5 +23,7 @@ export const useCheckIdentity = () => {
 
       return res;
     },
+    retry: false,
+    enabled: !isAuthenticated,
   });
 };

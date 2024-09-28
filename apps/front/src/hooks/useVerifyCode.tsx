@@ -25,6 +25,7 @@ export const useVerifyCode = () => {
         setUser(data.user);
         setSessionId(data.session_id);
         navigate("/");
+        setStep("email");
       } else {
         setStep("infos");
       }

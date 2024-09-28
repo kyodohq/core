@@ -9,7 +9,7 @@ interface AuthState {
   setEmailToVerify: (email: string) => void;
 
   user: User | null;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
 }
 
 export const useAuth = create<AuthState>((set) => ({
@@ -20,5 +20,5 @@ export const useAuth = create<AuthState>((set) => ({
   setEmailToVerify: (email: string) => set({ emailToVerify: email }),
 
   user: null,
-  setUser: (user: User) => set({ user }),
+  setUser: (user: User | null) => set({ user }),
 }));

@@ -197,3 +197,15 @@ authRoute.post("/verify-username", async (c) => {
 
   return c.text("Available");
 });
+
+authRoute.get("/logout", async (c) => {
+  const header = c.req.header("Authorization");
+  const sessionId = header?.split(" ")[1];
+  if (!header || !sessionId) {
+    return c.json({ error: "No session id" }, 404);
+  }
+
+  await redis.del(sessionId);
+
+  return c.text("Logged out");
+});

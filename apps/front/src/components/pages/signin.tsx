@@ -6,14 +6,14 @@ import { EmailForm } from "../shared/auth/emailForm";
 import { CodeForm } from "../shared/auth/codeForm";
 import { motion } from "framer-motion";
 import { animateForm, exitForm, initialForm } from "../shared/animation";
-import { useCheckIdentity } from "@/hooks/useCheckIdentity";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "@/stores/authStore";
 
 export const Signin = () => {
   const { step } = useStep();
-  const { data } = useCheckIdentity();
+  const { isAuthenticated } = useAuth();
 
-  if (data) {
+  if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
